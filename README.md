@@ -22,6 +22,17 @@ from torqueo import XYZ
 @todo
 ```
 
+# Examples of transformations
+
+Below are some examples of image transformations using Torqueo.
+
+|  |  ||
+|----------------|----------------|----------------|
+| ![Original Image](./assets/rabbit.jpg)<br> Original Image | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  |
+| ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  |
+
+
+
 # Authors of the code
 
 - [Thomas Fel](https://thomasfel.fr) - thomas_fel@brown.edu, PhD Student DEEL (ANITI), Brown University

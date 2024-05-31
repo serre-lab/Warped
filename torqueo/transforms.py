@@ -130,6 +130,10 @@ class Stretching(WarpTransform):
         return grid
 
 class Twirl(WarpTransform):
+    '''
+    Implemented similarly to the algo presented here: 
+    https://stackoverflow.com/questions/30448045/how-do-you-add-a-swirl-to-an-image-image-distortion 
+    '''
     def __init__(self, strength=3):
         super(Twirl, self).__init__()
         self.strength = strength #the number of swirl twists
@@ -145,6 +149,26 @@ class Twirl(WarpTransform):
         twist_angle = self.strength * swirl_amount
         x_new = r * torch.cos(theta + twist_angle)
         y_new = r * torch.sin(theta + twist_angle)
+
+        x_new = x_new.clamp(-1, 1)
+        y_new = y_new.clamp(-1, 1)
+
+        grid = torch.stack((x_new, y_new), dim=-1)
+        grid = grid.unsqueeze(0)
+        return grid
+
+class Wave(WarpTransform):
+    def __init__(self, strength=2):
+        super(Wave, self).__init__()
+        self.strength = strength 
+
+    def generate_warp_field(self, height, width):
+        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+
+        amplitude = 0.1 * self.strength
+        angular_frequency = 2 * 3.14 * 1 * self.strength  #2*pi*f*strength
+        x_new = x_indices + amplitude*torch.sin(angular_frequency*x_indices)
+        y_new = y_indices + amplitude*torch.sin(angular_frequency*y_indices)
 
         x_new = x_new.clamp(-1, 1)
         y_new = y_new.clamp(-1, 1)

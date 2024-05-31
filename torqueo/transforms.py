@@ -130,16 +130,21 @@ class Stretching(WarpTransform):
         return grid
 
 class Twirl(WarpTransform):
-    def __init__(self, strength=2):
+    def __init__(self, strength=3):
         super(Twirl, self).__init__()
-        self.strength = strength
+        self.strength = strength #the number of swirl twists
 
     def generate_warp_field(self, height, width):
         y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+
         r = torch.sqrt(x_indices ** 2 + y_indices ** 2)
-        
-        x_new = x_indices
-        y_new = y_indices/self.strength
+        theta = torch.atan2(y_indices, x_indices)
+
+        swirl_amount = 1.0 - r/torch.sqrt(2) #most swirl at center and decreasing towards corners of image
+        swirl_amount = swirl_amount.clamp(0)
+        twist_angle = self.strength * swirl_amount
+        x_new = r * torch.cos(theta + twist_angle)
+        y_new = r * torch.sin(theta + twist_angle)
 
         x_new = x_new.clamp(-1, 1)
         y_new = y_new.clamp(-1, 1)

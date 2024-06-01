@@ -267,8 +267,10 @@ class PolarCoordinates(WarpTransform):
         r = torch.sqrt(x_indices ** 2 + y_indices ** 2)
         theta = torch.atan2(y_indices, x_indices)
 
-        x_new = x_indices * torch.sin(theta)
-        y_new = y_indices * torch.cos(theta)
+        r_normalized = (r/torch.max(r))*2 - 1
+        theta_normalized = (theta + 3.14)/(3.14) - 1
+        x_new = theta_normalized
+        y_new = r_normalized
 
         x_new = x_new.clamp(-1, 1)
         y_new = y_new.clamp(-1, 1)

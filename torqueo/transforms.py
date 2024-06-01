@@ -131,6 +131,7 @@ class Stretching(WarpTransform):
 
 class Twirl(WarpTransform):
     '''
+    Swirl and Twirl seem the same.
     Implemented similarly to the algo presented here: 
     https://stackoverflow.com/questions/30448045/how-do-you-add-a-swirl-to-an-image-image-distortion 
     '''
@@ -158,6 +159,9 @@ class Twirl(WarpTransform):
         return grid
 
 class Wave(WarpTransform):
+    '''
+    Warps along height and width with same sinusoidal wave.
+    '''
     def __init__(self, strength=2):
         super(Wave, self).__init__()
         self.strength = strength 
@@ -177,3 +181,55 @@ class Wave(WarpTransform):
         grid = grid.unsqueeze(0)
         return grid
 
+class PerspectiveWarp(WarpTransform):
+    '''
+    Code from RandomPerspective and perspective in PyTorch. 
+    Original code: https://pytorch.org/vision/main/_modules/torchvision/transforms/transforms.html#RandomPerspective 
+    https://pytorch.org/vision/main/_modules/torchvision/transforms/functional.html#perspective 
+    '''
+    def __init__(self, strength=0.5):
+        super(PerspectiveWarp, self).__init__()
+        self.strength = strength
+
+    def generate_warp_field(self, height, width):
+        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+
+        distortion_scale = self.strength
+        half_height = height // 2
+        half_width = width // 2
+        topleft = [
+            int(torch.randint(0, int(distortion_scale * half_width) + 1, size=(1,)).item()),
+            int(torch.randint(0, int(distortion_scale * half_height) + 1, size=(1,)).item()),
+        ]
+        topright = [
+            int(torch.randint(width - int(distortion_scale * half_width) - 1, width, size=(1,)).item()),
+            int(torch.randint(0, int(distortion_scale * half_height) + 1, size=(1,)).item()),
+        ]
+        botright = [
+            int(torch.randint(width - int(distortion_scale * half_width) - 1, width, size=(1,)).item()),
+            int(torch.randint(height - int(distortion_scale * half_height) - 1, height, size=(1,)).item()),
+        ]
+        botleft = [
+            int(torch.randint(0, int(distortion_scale * half_width) + 1, size=(1,)).item()),
+            int(torch.randint(height - int(distortion_scale * half_height) - 1, height, size=(1,)).item()),
+        ]
+        startpoints = [[0, 0], [width - 1, 0], [width - 1, height - 1], [0, height - 1]]
+        endpoints = [topleft, topright, botright, botleft]
+        
+        a_matrix = torch.zeros(2 * len(startpoints), 8, dtype=torch.float64)
+        for i, (p1, p2) in enumerate(zip(endpoints, startpoints)):
+            a_matrix[2 * i, :] = torch.tensor([p1[0], p1[1], 1, 0, 0, 0, -p2[0] * p1[0], -p2[0] * p1[1]])
+            a_matrix[2 * i + 1, :] = torch.tensor([0, 0, 0, p1[0], p1[1], 1, -p2[1] * p1[0], -p2[1] * p1[1]])
+
+        b_matrix = torch.tensor(startpoints, dtype=torch.float64).view(8)
+        res = torch.linalg.lstsq(a_matrix, b_matrix, driver="gels").solution.to(torch.float32).tolist()
+        #res is (a, b, c, d, e, f, g, h)
+        #(x, y) -> ( (ax + by + c) / (gx + hy + 1), (dx + ey + f) / (gx + hy + 1) )
+        x_new = (res[0]*x_indices + res[1]*y_indices + res[2])/(res[6]*x_indices + res[7]*y_indices + 1)
+        y_new = (res[3]*x_indices + res[4]*y_indices + res[5])/(res[6]*x_indices + res[7]*y_indices + 1)
+        x_new = x_new.clamp(-1, 1)
+        y_new = y_new.clamp(-1, 1)
+
+        grid = torch.stack((x_new, y_new), dim=-1)
+        grid = grid.unsqueeze(0)
+        return grid

@@ -233,3 +233,26 @@ class PerspectiveWarp(WarpTransform):
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
         return grid
+
+class Shear(WarpTransform):
+    '''
+    Equal shear in both the x and the y dimensions. 
+    Implemented as described here (composition): https://en.wikipedia.org/wiki/Shear_mapping
+    This is by default right leaning or top leaning shear, use negative values for the opposite effect. 
+    '''
+    def __init__(self, strength=0.5):
+        super(Shear, self).__init__()
+        self.strength = strength
+
+    def generate_warp_field(self, height, width):
+        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+
+        x_new = (1 + self.strength**2)*x_indices + self.strength*y_indices
+        y_new = self.strength*x_indices + y_indices
+
+        x_new = x_new.clamp(-1, 1)
+        y_new = y_new.clamp(-1, 1)
+
+        grid = torch.stack((x_new, y_new), dim=-1)
+        grid = grid.unsqueeze(0)
+        return grid

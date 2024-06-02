@@ -12,14 +12,17 @@ class WarpTransform(torch.nn.Module):
         raise NotImplementedError("Subclasses must implement generate_warp_field")
 
     def forward(self, img):
+        assert img.dim() == 4
+
         batch_size, channels, height, width = img.size()
         grid = self.generate_warp_field(height, width)
         grid = grid.to(img.device)
 
-        warped_img = F.grid_sample(img, grid, align_corners=True, mode='bilinear', padding_mode='border')
+        warped_img = F.grid_sample(img, grid, align_corners=True, mode='bilinear', padding_mode='zeros')
         return warped_img
 
     def visualize_warp_field(self, grid):
+        # @tfel: we need a better way
         for i in range(2):
             plt.subplot(1, 2, i+1)
             show(grid[0, :, :, i].cpu().numpy())

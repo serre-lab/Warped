@@ -319,11 +319,13 @@ class Wave(WarpTransform):
 
     Transformation
     --------------
-    y' = y + amplitude * sin(2 * pi * frequency * x + phase)  (if axis = 'horizontal')
-    x' = x + amplitude * sin(2 * pi * frequency * y + phase)  (if axis = 'vertical')
+    y' = y + strength * amplitude * sin(2 * pi * frequency * x + phase)  (if axis = 'horizontal')
+    x' = x + strength * amplitude * sin(2 * pi * frequency * y + phase)  (if axis = 'vertical')
 
     Parameters
     ----------
+    strength: float 
+        The strength of the distortion as defined by the scaling of the amplitude. 
     amplitude : float
         The amplitude of the wave.
     frequency : float
@@ -333,11 +335,9 @@ class Wave(WarpTransform):
     axis : str
         The axis along which to apply the wave effect ('horizontal' or 'vertical').
     """
-    def __init__(self, amplitude=0.1, frequency=1.0, phase=0.0, axis='horizontal'):
-        assert axis in ['x', 'y']
-
+    def __init__(self, strength = 1, amplitude=0.1, frequency=1.0, phase=0.0, axis='horizontal'):
         super(Wave, self).__init__()
-        self.amplitude = amplitude
+        self.amplitude = strength * amplitude
         self.frequency = frequency
         self.phase = phase
         assert axis in ['horizontal', 'vertical']

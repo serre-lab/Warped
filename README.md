@@ -17,9 +17,9 @@ Example usage:
 ```python
 import torch
 import timm
-from torqueo import XYZ
+from torqueo import Fisheye
 
-@todo
+
 ```
 
 # Examples of transformations
@@ -28,8 +28,10 @@ Below are some examples of image transformations using Torqueo.
 
 |  |  ||
 |----------------|----------------|----------------|
-| ![Original Image](./assets/rabbit.jpg)<br> Original Image | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  |
-| ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  |
+| ![Original Image](./assets/rabbit.jpg)<br> Original Image | ![Barrel](./assets/transformations/barrel.jpg)<br> Barrel | ![Fisheye](./assets/transformations/fisheye.jpg)<br> Fisheye  |
+| ![Perspective](./assets/transformations/perspective.jpg)<br> Perspective  | ![Pinch](./assets/transformations/pinch.jpg)<br> Pinch  | ![Spherize](./assets/transformations/spherize.jpg)<br> Spherize  |
+| ![Stretch](./assets/transformations/stretch.jpg)<br> Stretch  | ![Swirl](./assets/transformations/swirl.jpg)<br> Swirl  | ![Twirl](./assets/transformations/twirl.jpg)<br> Twirl  |
+| ![Wave](./assets/transformations/wave.jpg)<br> Wave  |   |   |
 
 
 

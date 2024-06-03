@@ -334,13 +334,12 @@ class Wave(WarpTransform):
         The axis along which to apply the wave effect ('horizontal' or 'vertical').
     """
     def __init__(self, amplitude=0.1, frequency=1.0, phase=0.0, axis='horizontal'):
-        assert axis in ['x', 'y']
+        assert axis in ['horizontal', 'vertical']
 
         super(Wave, self).__init__()
         self.amplitude = amplitude
         self.frequency = frequency
         self.phase = phase
-        assert axis in ['horizontal', 'vertical']
         self.axis = axis
 
     def generate_warp_field(self, height, width):
@@ -441,7 +440,7 @@ class Bulge(WarpTransform):
     """
     def __init__(self, strength=1.0):
         super(Bulge, self).__init__()
-        assert strength >= 1.0
+        # @tfel: find a way to proper assert strenght > 1.0 when not call from subclass
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -622,7 +621,7 @@ class Shear(WarpTransform):
         grid = grid.unsqueeze(0)
         return grid
 
-class PerspectiveWarp(WarpTransform):
+class Perspective(WarpTransform):
     """
     Applies a random perspective wrap as defined here:
     https://pytorch.org/vision/main/_modules/torchvision/transforms/transforms.html#RandomPerspective
@@ -641,7 +640,7 @@ class PerspectiveWarp(WarpTransform):
         The strength of the perspective distortion effect.
     """
     def __init__(self, strength=0.5):
-        super(PerspectiveWarp, self).__init__()
+        super(Perspective, self).__init__()
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -665,6 +664,8 @@ class PerspectiveWarp(WarpTransform):
         distortion_scale = self.strength
         half_height = height // 2
         half_width = width // 2
+
+        # @tfel: we should expose a non-random function too
         topleft = [
             int(torch.randint(0, int(distortion_scale * half_width) + 1, size=(1,)).item()),
             int(torch.randint(0, int(distortion_scale * half_height) + 1, size=(1,)).item()),

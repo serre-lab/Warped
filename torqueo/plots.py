@@ -14,7 +14,7 @@ def check_format(arr):
         arr = to_numpy(arr)
     if isinstance(arr, Image.Image):
         arr = np.array(arr)
-    if arr.shape[0] == 3:
+    if arr.shape[0] in [1, 3]:
         return np.moveaxis(arr, 0, -1)
     return arr
 
@@ -29,10 +29,10 @@ def clip_percentile(img, p=0.1):
     # clip pixel values to specified percentile range
     return np.clip(img, np.percentile(img, p), np.percentile(img, 100-p))
 
-def show(img, **kwargs):
+def show(img, norm=False, **kwargs):
     # display image with normalization and channels in the last dimension
     img = check_format(img)
-    img = normalize(img)
+    img = normalize(img) if norm else img
 
     plt.imshow(img, **kwargs)
     plt.axis('off')

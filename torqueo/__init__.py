@@ -11,4 +11,5 @@ __version__ = '0.0.0'
 
 from .base import WarpTransform
 from .plots import show
-from .transforms import Fisheye
+from .transforms import (BarrelDistortion, Bulge, Fisheye, Perspective, Pinch, Spherize,
+                         Stretching, Swirl, Twirl, Wave, Punch, Implosion, Compression)

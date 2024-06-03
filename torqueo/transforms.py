@@ -3,6 +3,7 @@ import torch.nn.functional as F
 
 from .base import WarpTransform
 
+
 class Fisheye(WarpTransform):
     """
     Applies a fisheye distortion effect by stretching the magnitude of the coordinates based
@@ -20,6 +21,7 @@ class Fisheye(WarpTransform):
     strength : float
         The strength of the distorsion. Identity function for strenght = 0.0.
     """
+
     def __init__(self, strength=0.5):
         super(Fisheye, self).__init__()
         self.strength = strength
@@ -40,7 +42,9 @@ class Fisheye(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         # get polar form
         magnitude = torch.sqrt(x_indices ** 2 + y_indices ** 2)
@@ -54,6 +58,7 @@ class Fisheye(WarpTransform):
         grid = grid.unsqueeze(0)
 
         return grid
+
 
 class Swirl(WarpTransform):
     """
@@ -73,6 +78,7 @@ class Swirl(WarpTransform):
     radius : float
         The maximum distance from the center where the swirl effect is applied.
     """
+
     def __init__(self, strength=1.0, radius=1.0):
         super(Swirl, self).__init__()
         self.strength = strength
@@ -94,13 +100,15 @@ class Swirl(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         # get polar form
         magnitude = torch.sqrt(x_indices**2 + y_indices**2)
         angle = torch.atan2(y_indices, x_indices)
         # rotate anticlockwise depending on the radius and strength
-        swirl_factor = (self.radius - magnitude) * self.strength 
+        swirl_factor = (self.radius - magnitude) * self.strength
         angle += swirl_factor
 
         x_new = magnitude * torch.cos(angle)
@@ -110,6 +118,7 @@ class Swirl(WarpTransform):
         grid = grid.unsqueeze(0)
 
         return grid
+
 
 class BarrelDistortion(WarpTransform):
     """
@@ -131,6 +140,7 @@ class BarrelDistortion(WarpTransform):
     strength : float
         The strength of the barrel distortion effect.
     """
+
     def __init__(self, strength=0.5):
         super(BarrelDistortion, self).__init__()
         self.strength = strength
@@ -151,7 +161,9 @@ class BarrelDistortion(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         # compute the undistorted radial distance r_u
         r_u = torch.sqrt(x_indices ** 2 + y_indices ** 2)
@@ -168,7 +180,8 @@ class BarrelDistortion(WarpTransform):
 
         return grid
 
-class Pincusion(BarrelDistortion):
+
+class Pincushion(BarrelDistortion):
     """
     Applies a pincushion distortion effect, which is the inverse of barrel distortion.
 
@@ -183,8 +196,10 @@ class Pincusion(BarrelDistortion):
     strength : float
         The strength of the pincushion distortion effect.
     """
+
     def __init__(self, strength=0.5):
-        super(Pincusion, self).__init__(-strength)
+        super(Pincushion, self).__init__(-strength)
+
 
 class Stretching(WarpTransform):
     """
@@ -202,6 +217,7 @@ class Stretching(WarpTransform):
     axis : str
         The axis along which to apply the stretching effect ('horizontal' or 'vertical').
     """
+
     def __init__(self, strength=0.5, axis='horizontal'):
         super(Stretching, self).__init__()
         assert axis in ['horizontal', 'vertical']
@@ -225,7 +241,9 @@ class Stretching(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         if self.axis == 'horizontal':
             x_new = x_indices * (1 + self.strength)
@@ -239,6 +257,7 @@ class Stretching(WarpTransform):
         grid = grid.unsqueeze(0)
 
         return grid
+
 
 class Compression(Stretching):
     """
@@ -256,9 +275,11 @@ class Compression(Stretching):
     axis : str
         The axis along which to apply the stretching effect ('horizontal' or 'vertical').
     """
+
     def __init__(self, strength=0.5, axis='horizontal'):
         assert strength >= 0
         super(Compression, self).__init__(-strength, axis)
+
 
 class Twirl(WarpTransform):
     """
@@ -276,6 +297,7 @@ class Twirl(WarpTransform):
     strength : float
         The strength of the twirl effect.
     """
+
     def __init__(self, strength=0.5):
         super(Twirl, self).__init__()
         self.strength = strength
@@ -296,7 +318,9 @@ class Twirl(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         magnitude = torch.sqrt(x_indices ** 2 + y_indices ** 2)
         angle = torch.atan2(y_indices, x_indices)
@@ -313,17 +337,20 @@ class Twirl(WarpTransform):
 
         return grid
 
+
 class Wave(WarpTransform):
     """
     Applies a wave distortion effect along the specified axis.
 
     Transformation
     --------------
-    y' = y + amplitude * sin(2 * pi * frequency * x + phase)  (if axis = 'horizontal')
-    x' = x + amplitude * sin(2 * pi * frequency * y + phase)  (if axis = 'vertical')
+    y' = y + strength * amplitude * sin(2 * pi * frequency * x + phase)  (if axis = 'horizontal')
+    x' = x + strength * amplitude * sin(2 * pi * frequency * y + phase)  (if axis = 'vertical')
 
     Parameters
     ----------
+    strength: float 
+        The strength of the distortion as defined by the scaling of the amplitude. 
     amplitude : float
         The amplitude of the wave.
     frequency : float
@@ -333,11 +360,10 @@ class Wave(WarpTransform):
     axis : str
         The axis along which to apply the wave effect ('horizontal' or 'vertical').
     """
-    def __init__(self, amplitude=0.1, frequency=1.0, phase=0.0, axis='horizontal'):
-        assert axis in ['horizontal', 'vertical']
 
+    def __init__(self, strength=1, amplitude=0.1, frequency=1.0, phase=0.0, axis='horizontal'):
         super(Wave, self).__init__()
-        self.amplitude = amplitude
+        self.amplitude = strength * amplitude
         self.frequency = frequency
         self.phase = phase
         self.axis = axis
@@ -358,13 +384,17 @@ class Wave(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         if self.axis == 'horizontal':
             x_new = x_indices
-            y_new = y_indices + self.amplitude * torch.sin(2 * torch.pi * self.frequency * x_indices + self.phase)
+            y_new = y_indices + self.amplitude * torch.sin(
+                2 * torch.pi * self.frequency * x_indices + self.phase)
         else:
-            x_new = x_indices + self.amplitude * torch.sin(2 * torch.pi * self.frequency * y_indices + self.phase)
+            x_new = x_indices + self.amplitude * torch.sin(
+                2 * torch.pi * self.frequency * y_indices + self.phase)
             y_new = y_indices
 
         # create the grid for warping
@@ -372,6 +402,7 @@ class Wave(WarpTransform):
         grid = grid.unsqueeze(0)
 
         return grid
+
 
 class Spherize(WarpTransform):
     """
@@ -388,6 +419,7 @@ class Spherize(WarpTransform):
     strength : float
         The strength of the spherical distortion effect.
     """
+
     def __init__(self, strength=0.5):
         super(Spherize, self).__init__()
         self.strength = strength
@@ -408,12 +440,15 @@ class Spherize(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         magnitude = torch.sqrt(x_indices ** 2 + y_indices ** 2)
         angle = torch.atan2(y_indices, x_indices)
 
-        magnitude_new = torch.sin(magnitude * self.strength * torch.pi / 2) / (self.strength * torch.pi / 2)
+        magnitude_new = torch.sin(
+            magnitude * self.strength * torch.pi / 2) / (self.strength * torch.pi / 2)
 
         x_new = magnitude_new * torch.cos(angle)
         y_new = magnitude_new * torch.sin(angle)
@@ -422,6 +457,7 @@ class Spherize(WarpTransform):
         grid = grid.unsqueeze(0)
 
         return grid
+
 
 class Bulge(WarpTransform):
     """
@@ -438,6 +474,7 @@ class Bulge(WarpTransform):
     strength : float
         The strength of the bulge distortion effect. Must be greater than or equal to 1.0.
     """
+
     def __init__(self, strength=1.0):
         super(Bulge, self).__init__()
         # @tfel: find a way to proper assert strenght > 1.0 when not call from subclass
@@ -459,7 +496,9 @@ class Bulge(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         # compute the radial distance from the center
         r = torch.sqrt(x_indices ** 2 + y_indices ** 2)
@@ -478,6 +517,7 @@ class Bulge(WarpTransform):
 
         return grid
 
+
 class Implosion(Bulge):
     """
     Applies an implosion distortion effect by radially distorting the coordinates inward.
@@ -493,9 +533,11 @@ class Implosion(Bulge):
     strength : float
         The strength of the implosion distortion effect. Must be between 0.0 and 1.0.
     """
+
     def __init__(self, strength=0.5):
         assert 0.0 < strength <= 1.0
         super(Implosion, self).__init__(strength)
+
 
 class Pinch(WarpTransform):
     """
@@ -512,6 +554,7 @@ class Pinch(WarpTransform):
     strength : float
         The strength of the pinch distortion effect. Must be between 0.0 and 1.0.
     """
+
     def __init__(self, strength=0.5):
         super(Pinch, self).__init__()
         assert 0.0 <= strength <= 1.0
@@ -533,11 +576,13 @@ class Pinch(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         r = torch.sqrt(x_indices ** 2 + y_indices ** 2)
 
-        pinch_factor = torch.sin((torch.pi/2)* r) ** (-1*self.strength)
+        pinch_factor = torch.sin((torch.pi/2) * r) ** (-1*self.strength)
         x_new = x_indices*pinch_factor
         y_new = y_indices*pinch_factor
 
@@ -547,6 +592,7 @@ class Pinch(WarpTransform):
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
         return grid
+
 
 class Punch(Pinch):
     """
@@ -563,8 +609,10 @@ class Punch(Pinch):
     strength : float
         The strength of the punch distortion effect. Must be between 0.0 and 1.0.
     """
+
     def __init__(self, strength=0.5):
         super(Punch, self).__init__(-strength)
+
 
 class Shear(WarpTransform):
     """
@@ -583,6 +631,7 @@ class Shear(WarpTransform):
     axis: str
         The axis along which to apply the shearing effect ('horizontal' or 'vertical').
     """
+
     def __init__(self, strength=0.5, axis='horizontal'):
         super(Shear, self).__init__()
         self.strength = strength
@@ -605,9 +654,11 @@ class Shear(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
-        if self.axis=='horizontal':
+        if self.axis == 'horizontal':
             x_new = x_indices + self.strength*y_indices
             y_new = y_indices
         else:
@@ -620,6 +671,7 @@ class Shear(WarpTransform):
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
         return grid
+
 
 class Perspective(WarpTransform):
     """
@@ -639,6 +691,7 @@ class Perspective(WarpTransform):
     strength : float
         The strength of the perspective distortion effect.
     """
+
     def __init__(self, strength=0.5):
         super(Perspective, self).__init__()
         self.strength = strength
@@ -659,43 +712,49 @@ class Perspective(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
-        y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
+        y_indices, x_indices = torch.meshgrid(
+            torch.linspace(-1, 1, height),
+            torch.linspace(-1, 1, width))
 
         distortion_scale = self.strength
-        half_height = height // 2
-        half_width = width // 2
-
-        # @tfel: we should expose a non-random function too
+        half_height = 1
+        half_width = 1
         topleft = [
-            int(torch.randint(0, int(distortion_scale * half_width) + 1, size=(1,)).item()),
-            int(torch.randint(0, int(distortion_scale * half_height) + 1, size=(1,)).item()),
+            -1 + distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*torch.rand(1).item(),
         ]
         topright = [
-            int(torch.randint(width - int(distortion_scale * half_width) - 1, width, size=(1,)).item()),
-            int(torch.randint(0, int(distortion_scale * half_height) + 1, size=(1,)).item()),
+            1 - distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*torch.rand(1).item(),
         ]
         botright = [
-            int(torch.randint(width - int(distortion_scale * half_width) - 1, width, size=(1,)).item()),
-            int(torch.randint(height - int(distortion_scale * half_height) - 1, height, size=(1,)).item()),
+            1 - distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*torch.rand(1).item(),
         ]
         botleft = [
-            int(torch.randint(0, int(distortion_scale * half_width) + 1, size=(1,)).item()),
-            int(torch.randint(height - int(distortion_scale * half_height) - 1, height, size=(1,)).item()),
+            -1 + distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*torch.rand(1).item(),
         ]
-        startpoints = [[0, 0], [width - 1, 0], [width - 1, height - 1], [0, height - 1]]
+        startpoints = [[-1, 1], [1, 1], [1, -1], [-1, -1]]
         endpoints = [topleft, topright, botright, botleft]
 
         a_matrix = torch.zeros(2 * len(startpoints), 8, dtype=torch.float64)
         for i, (p1, p2) in enumerate(zip(endpoints, startpoints)):
-            a_matrix[2 * i, :] = torch.tensor([p1[0], p1[1], 1, 0, 0, 0, -p2[0] * p1[0], -p2[0] * p1[1]])
-            a_matrix[2 * i + 1, :] = torch.tensor([0, 0, 0, p1[0], p1[1], 1, -p2[1] * p1[0], -p2[1] * p1[1]])
+            a_matrix[2 * i, :] = torch.tensor([p1[0], p1[1], 1, 0,
+                                              0, 0, -p2[0] * p1[0], -p2[0] * p1[1]])
+            a_matrix[2 * i + 1, :] = torch.tensor([0, 0, 0,
+                                                  p1[0], p1[1], 1, -p2[1] * p1[0], -p2[1] * p1[1]])
 
         b_matrix = torch.tensor(startpoints, dtype=torch.float64).view(8)
-        res = torch.linalg.lstsq(a_matrix, b_matrix, driver="gels").solution.to(torch.float32).tolist()
-        #res is (a, b, c, d, e, f, g, h)
-        #(x, y) -> ( (ax + by + c) / (gx + hy + 1), (dx + ey + f) / (gx + hy + 1) )
-        x_new = (res[0]*x_indices + res[1]*y_indices + res[2])/(res[6]*x_indices + res[7]*y_indices + 1)
-        y_new = (res[3]*x_indices + res[4]*y_indices + res[5])/(res[6]*x_indices + res[7]*y_indices + 1)
+        res = torch.linalg.lstsq(
+            a_matrix, b_matrix, driver="gels").solution.to(
+            torch.float32).tolist()
+        # res is (a, b, c, d, e, f, g, h)
+        # (x, y) -> ( (ax + by + c) / (gx + hy + 1), (dx + ey + f) / (gx + hy + 1) )
+        x_new = (res[0]*x_indices + res[1]*y_indices + res[2]
+                 )/(res[6]*x_indices + res[7]*y_indices + 1)
+        y_new = (res[3]*x_indices + res[4]*y_indices + res[5]
+                 )/(res[6]*x_indices + res[7]*y_indices + 1)
         x_new = x_new.clamp(-1, 1)
         y_new = y_new.clamp(-1, 1)
 

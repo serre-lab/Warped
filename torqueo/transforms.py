@@ -168,7 +168,7 @@ class BarrelDistortion(WarpTransform):
 
         return grid
 
-class Pincusion(BarrelDistortion):
+class Pincushion(BarrelDistortion):
     """
     Applies a pincushion distortion effect, which is the inverse of barrel distortion.
 
@@ -184,7 +184,7 @@ class Pincusion(BarrelDistortion):
         The strength of the pincushion distortion effect.
     """
     def __init__(self, strength=0.5):
-        super(Pincusion, self).__init__(-strength)
+        super(Pincushion, self).__init__(-strength)
 
 class Stretching(WarpTransform):
     """

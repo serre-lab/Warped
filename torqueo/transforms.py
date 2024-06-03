@@ -100,7 +100,7 @@ class Swirl(WarpTransform):
         magnitude = torch.sqrt(x_indices**2 + y_indices**2)
         angle = torch.atan2(y_indices, x_indices)
         # rotate anticlockwise depending on the radius and strength
-        swirl_factor = (self.radius - magnitude) * self.strength  #Questions: this can become negative, might want to clip at 0. 
+        swirl_factor = (self.radius - magnitude) * self.strength 
         angle += swirl_factor
 
         x_new = magnitude * torch.cos(angle)
@@ -228,7 +228,7 @@ class Stretching(WarpTransform):
         y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
 
         if self.axis == 'horizontal':
-            x_new = x_indices * (1 + self.strength) #Questions: this might be doing compression and not stretching?
+            x_new = x_indices * (1 + self.strength)
             y_new = y_indices
         else:
             x_new = x_indices
@@ -302,7 +302,7 @@ class Twirl(WarpTransform):
         angle = torch.atan2(y_indices, x_indices)
 
         # twirl increase angle shift depending monotonically linearly on the distance
-        twirl_shift = self.strength * magnitude #Questions: this is unnormalized, i.e., not from 0 to 1 but from 0 to root_2. 
+        twirl_shift = self.strength * magnitude
 
         x_new = magnitude * torch.cos(angle + twirl_shift)
         y_new = magnitude * torch.sin(angle + twirl_shift)

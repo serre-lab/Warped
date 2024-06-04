@@ -174,6 +174,11 @@ class BarrelDistortion(WarpTransform):
         # angle dont' change
         x_new = r_d * torch.cos(theta)
         y_new = r_d * torch.sin(theta)
+        # scale to fill image
+        x_scale = min(1, 1/torch.max(torch.abs(x_new)))
+        y_scale = min(1, 1/torch.max(torch.abs(y_new)))
+        x_new = x_new*x_scale
+        y_new = y_new*y_scale
 
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
@@ -207,8 +212,8 @@ class Stretching(WarpTransform):
 
     Transformation
     --------------
-    x' = x * (1 + strength)  (if axis = 'horizontal')
-    y' = y * (1 + strength)  (if axis = 'vertical')
+    x' = x * (1 - strength)  (if axis = 'horizontal')
+    y' = y * (1 - strength)  (if axis = 'vertical')
 
     Parameters
     ----------
@@ -246,11 +251,11 @@ class Stretching(WarpTransform):
             torch.linspace(-1, 1, width))
 
         if self.axis == 'horizontal':
-            x_new = x_indices * (1 + self.strength)
+            x_new = x_indices * (1 - self.strength)
             y_new = y_indices
         else:
             x_new = x_indices
-            y_new = y_indices * (1 + self.strength)
+            y_new = y_indices * (1 - self.strength)
 
         # create the grid for warping
         grid = torch.stack((x_new, y_new), dim=-1)
@@ -265,8 +270,8 @@ class Compression(Stretching):
 
     Transformation
     --------------
-    x' = x * (1 - strength)  (if axis = 'horizontal')
-    y' = y * (1 - strength)  (if axis = 'vertical')
+    x' = x * (1 + strength)  (if axis = 'horizontal')
+    y' = y * (1 + strength)  (if axis = 'vertical')
 
     Parameters
     ----------
@@ -363,7 +368,8 @@ class Wave(WarpTransform):
 
     def __init__(self, strength=1, amplitude=0.1, frequency=1.0, phase=0.0, axis='horizontal'):
         super(Wave, self).__init__()
-        self.amplitude = strength * amplitude
+        self.strength = strength
+        self.amplitude = amplitude
         self.frequency = frequency
         self.phase = phase
         self.axis = axis
@@ -390,10 +396,10 @@ class Wave(WarpTransform):
 
         if self.axis == 'horizontal':
             x_new = x_indices
-            y_new = y_indices + self.amplitude * torch.sin(
+            y_new = y_indices + self.strength * self.amplitude * torch.sin(
                 2 * torch.pi * self.frequency * x_indices + self.phase)
         else:
-            x_new = x_indices + self.amplitude * torch.sin(
+            x_new = x_indices + self.strength * self.amplitude * torch.sin(
                 2 * torch.pi * self.frequency * y_indices + self.phase)
             y_new = y_indices
 
@@ -447,8 +453,8 @@ class Spherize(WarpTransform):
         magnitude = torch.sqrt(x_indices ** 2 + y_indices ** 2)
         angle = torch.atan2(y_indices, x_indices)
 
-        magnitude_new = torch.sin(
-            magnitude * self.strength * torch.pi / 2) / (self.strength * torch.pi / 2)
+        magnitude_new = torch.sin(magnitude * self.strength * torch.pi / 2) / (
+            self.strength * torch.pi / 2) if self.strength else magnitude
 
         x_new = magnitude_new * torch.cos(angle)
         y_new = magnitude_new * torch.sin(angle)
@@ -477,7 +483,6 @@ class Bulge(WarpTransform):
 
     def __init__(self, strength=1.0):
         super(Bulge, self).__init__()
-        # @tfel: find a way to proper assert strenght > 1.0 when not call from subclass
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -557,7 +562,7 @@ class Pinch(WarpTransform):
 
     def __init__(self, strength=0.5):
         super(Pinch, self).__init__()
-        assert 0.0 <= strength <= 1.0
+        assert 0.0 <= abs(strength) <= 1.0
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -585,9 +590,6 @@ class Pinch(WarpTransform):
         pinch_factor = torch.sin((torch.pi/2) * r) ** (-1*self.strength)
         x_new = x_indices*pinch_factor
         y_new = y_indices*pinch_factor
-
-        x_new = x_new.clamp(-1, 1)
-        y_new = y_new.clamp(-1, 1)
 
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
@@ -665,9 +667,6 @@ class Shear(WarpTransform):
             x_new = x_indices
             y_new = self.strength*x_indices + y_indices
 
-        x_new = x_new.clamp(-1, 1)
-        y_new = y_new.clamp(-1, 1)
-
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
         return grid
@@ -721,21 +720,21 @@ class Perspective(WarpTransform):
         half_width = 1
         topleft = [
             -1 + distortion_scale*torch.rand(1).item(),
-            1 - distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*torch.rand(1).item(),
         ]
         topright = [
             1 - distortion_scale*torch.rand(1).item(),
-            1 - distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*torch.rand(1).item(),
         ]
         botright = [
             1 - distortion_scale*torch.rand(1).item(),
-            -1 + distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*torch.rand(1).item(),
         ]
         botleft = [
             -1 + distortion_scale*torch.rand(1).item(),
-            -1 + distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*torch.rand(1).item(),
         ]
-        startpoints = [[-1, 1], [1, 1], [1, -1], [-1, -1]]
+        startpoints = [[-1, -1], [1, -1], [1, 1], [-1, 1]]
         endpoints = [topleft, topright, botright, botleft]
 
         a_matrix = torch.zeros(2 * len(startpoints), 8, dtype=torch.float64)
@@ -755,8 +754,6 @@ class Perspective(WarpTransform):
                  )/(res[6]*x_indices + res[7]*y_indices + 1)
         y_new = (res[3]*x_indices + res[4]*y_indices + res[5]
                  )/(res[6]*x_indices + res[7]*y_indices + 1)
-        x_new = x_new.clamp(-1, 1)
-        y_new = y_new.clamp(-1, 1)
 
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)

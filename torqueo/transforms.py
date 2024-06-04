@@ -162,6 +162,11 @@ class BarrelDistortion(WarpTransform):
         # angle dont' change
         x_new = r_d * torch.cos(theta)
         y_new = r_d * torch.sin(theta)
+        # scale to fill image
+        x_scale = min(1, 1/torch.max(torch.abs(x_new)))
+        y_scale = min(1, 1/torch.max(torch.abs(y_new)))
+        x_new = x_new*x_scale
+        y_new = y_new*y_scale
 
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
@@ -693,13 +698,3 @@ class PerspectiveWarp(WarpTransform):
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
         return grid
-
-    def forward(self, img):
-        assert img.dim() == 4
-
-        batch_size, channels, height, width = img.size()
-        grid = self.generate_warp_field(height, width)
-        grid = grid.to(img.device)
-
-        warped_img = F.grid_sample(img, grid, align_corners=True, mode='bilinear', padding_mode='zeros')
-        return warped_img

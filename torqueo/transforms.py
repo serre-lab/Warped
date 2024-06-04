@@ -542,9 +542,6 @@ class Pinch(WarpTransform):
         x_new = x_indices*pinch_factor
         y_new = y_indices*pinch_factor
 
-        x_new = x_new.clamp(-1, 1)
-        y_new = y_new.clamp(-1, 1)
-
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
         return grid
@@ -614,9 +611,6 @@ class Shear(WarpTransform):
         else:
             x_new = x_indices
             y_new = self.strength*x_indices + y_indices
-
-        x_new = x_new.clamp(-1, 1)
-        y_new = y_new.clamp(-1, 1)
 
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
@@ -695,8 +689,6 @@ class PerspectiveWarp(WarpTransform):
         #(x, y) -> ( (ax + by + c) / (gx + hy + 1), (dx + ey + f) / (gx + hy + 1) )
         x_new = (res[0]*x_indices + res[1]*y_indices + res[2])/(res[6]*x_indices + res[7]*y_indices + 1)
         y_new = (res[3]*x_indices + res[4]*y_indices + res[5])/(res[6]*x_indices + res[7]*y_indices + 1)
-        x_new = x_new.clamp(-1, 1)
-        y_new = y_new.clamp(-1, 1)
 
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)

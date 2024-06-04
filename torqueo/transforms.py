@@ -415,7 +415,7 @@ class Spherize(WarpTransform):
         magnitude = torch.sqrt(x_indices ** 2 + y_indices ** 2)
         angle = torch.atan2(y_indices, x_indices)
 
-        magnitude_new = torch.sin(magnitude * self.strength * torch.pi / 2) / (self.strength * torch.pi / 2)
+        magnitude_new = torch.sin(magnitude * self.strength * torch.pi / 2) / (self.strength * torch.pi / 2) if self.strength else magnitude
 
         x_new = magnitude_new * torch.cos(angle)
         y_new = magnitude_new * torch.sin(angle)
@@ -442,7 +442,6 @@ class Bulge(WarpTransform):
     """
     def __init__(self, strength=1.0):
         super(Bulge, self).__init__()
-        assert strength >= 1.0
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -516,7 +515,7 @@ class Pinch(WarpTransform):
     """
     def __init__(self, strength=0.5):
         super(Pinch, self).__init__()
-        assert 0.0 <= strength <= 1.0
+        assert 0.0 <= abs(strength) <= 1.0
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -668,21 +667,21 @@ class PerspectiveWarp(WarpTransform):
         half_width = 1
         topleft = [
             -1 + distortion_scale*torch.rand(1).item(),
-            1 - distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*torch.rand(1).item(),
         ]
         topright = [
             1 - distortion_scale*torch.rand(1).item(),
-            1 - distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*torch.rand(1).item(),
         ]
         botright = [
             1 - distortion_scale*torch.rand(1).item(),
-            -1 + distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*torch.rand(1).item(),
         ]
         botleft = [
             -1 + distortion_scale*torch.rand(1).item(),
-            -1 + distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*torch.rand(1).item(),
         ]
-        startpoints = [[-1, 1], [1, 1], [1, -1], [-1, -1]]
+        startpoints = [[-1, -1], [1, -1], [1, 1], [-1, 1]]
         endpoints = [topleft, topright, botright, botleft]
 
         a_matrix = torch.zeros(2 * len(startpoints), 8, dtype=torch.float64)
@@ -702,3 +701,13 @@ class PerspectiveWarp(WarpTransform):
         grid = torch.stack((x_new, y_new), dim=-1)
         grid = grid.unsqueeze(0)
         return grid
+
+    def forward(self, img):
+        assert img.dim() == 4
+
+        batch_size, channels, height, width = img.size()
+        grid = self.generate_warp_field(height, width)
+        grid = grid.to(img.device)
+
+        warped_img = F.grid_sample(img, grid, align_corners=True, mode='bilinear', padding_mode='zeros')
+        return warped_img

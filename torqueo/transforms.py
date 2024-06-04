@@ -192,8 +192,8 @@ class Stretching(WarpTransform):
 
     Transformation
     --------------
-    x' = x * (1 + strength)  (if axis = 'horizontal')
-    y' = y * (1 + strength)  (if axis = 'vertical')
+    x' = x * (1 - strength)  (if axis = 'horizontal')
+    y' = y * (1 - strength)  (if axis = 'vertical')
 
     Parameters
     ----------
@@ -228,11 +228,11 @@ class Stretching(WarpTransform):
         y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
 
         if self.axis == 'horizontal':
-            x_new = x_indices * (1 + self.strength)
+            x_new = x_indices * (1 - self.strength)
             y_new = y_indices
         else:
             x_new = x_indices
-            y_new = y_indices * (1 + self.strength)
+            y_new = y_indices * (1 - self.strength)
 
         # create the grid for warping
         grid = torch.stack((x_new, y_new), dim=-1)
@@ -246,8 +246,8 @@ class Compression(Stretching):
 
     Transformation
     --------------
-    x' = x * (1 - strength)  (if axis = 'horizontal')
-    y' = y * (1 - strength)  (if axis = 'vertical')
+    x' = x * (1 + strength)  (if axis = 'horizontal')
+    y' = y * (1 + strength)  (if axis = 'vertical')
 
     Parameters
     ----------

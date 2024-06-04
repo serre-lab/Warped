@@ -337,7 +337,8 @@ class Wave(WarpTransform):
     """
     def __init__(self, strength = 1, amplitude=0.1, frequency=1.0, phase=0.0, axis='horizontal'):
         super(Wave, self).__init__()
-        self.amplitude = strength * amplitude
+        self.strength = strength
+        self.amplitude = amplitude
         self.frequency = frequency
         self.phase = phase
         assert axis in ['horizontal', 'vertical']
@@ -363,9 +364,9 @@ class Wave(WarpTransform):
 
         if self.axis == 'horizontal':
             x_new = x_indices
-            y_new = y_indices + self.amplitude * torch.sin(2 * torch.pi * self.frequency * x_indices + self.phase)
+            y_new = y_indices + self.strength * self.amplitude * torch.sin(2 * torch.pi * self.frequency * x_indices + self.phase)
         else:
-            x_new = x_indices + self.amplitude * torch.sin(2 * torch.pi * self.frequency * y_indices + self.phase)
+            x_new = x_indices + self.strength * self.amplitude * torch.sin(2 * torch.pi * self.frequency * y_indices + self.phase)
             y_new = y_indices
 
         # create the grid for warping

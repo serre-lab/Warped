@@ -663,25 +663,25 @@ class PerspectiveWarp(WarpTransform):
         y_indices, x_indices = torch.meshgrid(torch.linspace(-1, 1, height), torch.linspace(-1, 1, width))
 
         distortion_scale = self.strength
-        half_height = height // 2
-        half_width = width // 2
+        half_height = 1
+        half_width = 1
         topleft = [
-            int(torch.randint(0, int(distortion_scale * half_width) + 1, size=(1,)).item()),
-            int(torch.randint(0, int(distortion_scale * half_height) + 1, size=(1,)).item()),
+            -1 + distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*torch.rand(1).item(),
         ]
         topright = [
-            int(torch.randint(width - int(distortion_scale * half_width) - 1, width, size=(1,)).item()),
-            int(torch.randint(0, int(distortion_scale * half_height) + 1, size=(1,)).item()),
+            1 - distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*torch.rand(1).item(),
         ]
         botright = [
-            int(torch.randint(width - int(distortion_scale * half_width) - 1, width, size=(1,)).item()),
-            int(torch.randint(height - int(distortion_scale * half_height) - 1, height, size=(1,)).item()),
+            1 - distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*torch.rand(1).item(),
         ]
         botleft = [
-            int(torch.randint(0, int(distortion_scale * half_width) + 1, size=(1,)).item()),
-            int(torch.randint(height - int(distortion_scale * half_height) - 1, height, size=(1,)).item()),
+            -1 + distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*torch.rand(1).item(),
         ]
-        startpoints = [[0, 0], [width - 1, 0], [width - 1, height - 1], [0, height - 1]]
+        startpoints = [[-1, 1], [1, 1], [1, -1], [-1, -1]]
         endpoints = [topleft, topright, botright, botleft]
 
         a_matrix = torch.zeros(2 * len(startpoints), 8, dtype=torch.float64)

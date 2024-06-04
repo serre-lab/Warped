@@ -55,5 +55,6 @@ class WarpController():
         swirl_transformer = SwirlController(1, radius=1) #or, SwirlController(distortion_level=1, radius=1) 
         Args following distortion_level need to be keyword arguments. 
         """
+        assert 0<=distortion_level<=5
         strength = self.mapping_dict[self.class_name](distortion_level)
         return self.warp_transform(strength=strength, **kwargs)

@@ -48,7 +48,7 @@ class WarpController():
                         "Stretching": lambda x: torch.linspace(0, 0.8, 6)[x], 
                         "Compression": lambda x: torch.linspace(0, 2, 6)[x], 
                         "Twirl": lambda x: torch.linspace(0, 1, 6)[x], 
-                        "Wave": lambda x: torch.linspace(0, 1.5, 6)[x], 
+                        "Wave": lambda x: torch.linspace(0, 1.8, 6)[x], 
                         "Spherize": lambda x: torch.linspace(0, 1.2, 6)[x], 
                         "Bulge": lambda x: torch.linspace(1, 3, 6)[x], 
                         "Implosion": lambda x: torch.linspace(0.5, 1, 6)[5-x], 

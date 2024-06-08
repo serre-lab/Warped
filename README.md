@@ -1,6 +1,7 @@
-# Torqueo: A Compact Library for Image Warping in Pytorch
+<div align="center">
+    <img src="assets/banner.png" width="75%" alt="Horama logo" align="center" />
+</div>
 
-Todo.
 
 # 🚀 Getting Started with Torqueo
 
@@ -19,7 +20,7 @@ import torch
 import timm
 from torqueo import Fisheye
 
-
+@tfel todo
 ```
 
 # Examples of transformations

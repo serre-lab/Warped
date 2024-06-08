@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import Bulge
 from torqueo import show
 
+
 def test_bulge():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_bulge():
     plt.savefig('assets/warp_fields/bulge.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

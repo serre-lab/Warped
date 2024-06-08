@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="assets/banner.png" width="75%" alt="Horama logo" align="center" />
+    <img src="assets/banner.png" width="75%" alt="Torqueo logo" align="center" />
 </div>
 
 
@@ -38,5 +38,5 @@ Below are some examples of image transformations using Torqueo.
 
 # Authors of the code
 
-- [Thomas Fel](https://thomasfel.fr) - thomas_fel@brown.edu, PhD Student DEEL (ANITI), Brown University
 - [Vipul Sharma]() - vipul_sharma@brown.edu, Brown University
+- [Thomas Fel](https://thomasfel.fr) - thomas_fel@brown.edu, PhD Student DEEL (ANITI), Brown University

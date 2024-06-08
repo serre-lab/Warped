@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import BarrelDistortion
 from torqueo import show
 
+
 def test_barrel():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_barrel():
     plt.savefig('assets/warp_fields/barrel.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import Swirl
 from torqueo import show
 
+
 def test_swirl():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_swirl():
     plt.savefig('assets/warp_fields/swirl.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import Perspective
 from torqueo import show
 
+
 def test_perspective():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_perspective():
     plt.savefig('assets/warp_fields/perspective.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

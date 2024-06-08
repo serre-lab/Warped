@@ -1,5 +1,4 @@
 import torch
-import torch.nn.functional as F
 
 from .base import WarpTransform
 
@@ -23,7 +22,7 @@ class Fisheye(WarpTransform):
     """
 
     def __init__(self, strength=0.5):
-        super(Fisheye, self).__init__()
+        super().__init__()
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -80,7 +79,7 @@ class Swirl(WarpTransform):
     """
 
     def __init__(self, strength=1.0, radius=1.0):
-        super(Swirl, self).__init__()
+        super().__init__()
         self.strength = strength
         self.radius = radius
 
@@ -142,7 +141,7 @@ class BarrelDistortion(WarpTransform):
     """
 
     def __init__(self, strength=0.5):
-        super(BarrelDistortion, self).__init__()
+        super().__init__()
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -203,7 +202,7 @@ class Pincushion(BarrelDistortion):
     """
 
     def __init__(self, strength=0.5):
-        super(Pincushion, self).__init__(-strength)
+        super().__init__(-strength)
 
 
 class Stretching(WarpTransform):
@@ -224,7 +223,7 @@ class Stretching(WarpTransform):
     """
 
     def __init__(self, strength=0.5, axis='horizontal'):
-        super(Stretching, self).__init__()
+        super().__init__()
         assert axis in ['horizontal', 'vertical']
 
         self.strength = strength
@@ -283,7 +282,7 @@ class Compression(Stretching):
 
     def __init__(self, strength=0.5, axis='horizontal'):
         assert strength >= 0
-        super(Compression, self).__init__(-strength, axis)
+        super().__init__(-strength, axis)
 
 
 class Twirl(WarpTransform):
@@ -304,7 +303,7 @@ class Twirl(WarpTransform):
     """
 
     def __init__(self, strength=0.5):
-        super(Twirl, self).__init__()
+        super().__init__()
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -354,8 +353,8 @@ class Wave(WarpTransform):
 
     Parameters
     ----------
-    strength: float 
-        The strength of the distortion as defined by the scaling of the amplitude. 
+    strength: float
+        The strength of the distortion as defined by the scaling of the amplitude.
     amplitude : float
         The amplitude of the wave.
     frequency : float
@@ -367,7 +366,7 @@ class Wave(WarpTransform):
     """
 
     def __init__(self, strength=1, amplitude=0.1, frequency=1.0, phase=0.0, axis='horizontal'):
-        super(Wave, self).__init__()
+        super().__init__()
         self.strength = strength
         self.amplitude = amplitude
         self.frequency = frequency
@@ -427,7 +426,7 @@ class Spherize(WarpTransform):
     """
 
     def __init__(self, strength=0.5):
-        super(Spherize, self).__init__()
+        super().__init__()
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -482,7 +481,7 @@ class Bulge(WarpTransform):
     """
 
     def __init__(self, strength=1.0):
-        super(Bulge, self).__init__()
+        super().__init__()
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -506,15 +505,15 @@ class Bulge(WarpTransform):
             torch.linspace(-1, 1, width))
 
         # compute the radial distance from the center
-        r = torch.sqrt(x_indices ** 2 + y_indices ** 2)
+        magnitude = torch.sqrt(x_indices ** 2 + y_indices ** 2)
         theta = torch.atan2(y_indices, x_indices)
 
         # apply bulge distortion
-        r_new = r ** self.strength
+        magnitude_new = magnitude ** self.strength
 
         # compute new coordinates
-        x_new = r_new * torch.cos(theta)
-        y_new = r_new * torch.sin(theta)
+        x_new = magnitude_new * torch.cos(theta)
+        y_new = magnitude_new * torch.sin(theta)
 
         # create the grid for warping
         grid = torch.stack((x_new, y_new), dim=-1)
@@ -541,7 +540,7 @@ class Implosion(Bulge):
 
     def __init__(self, strength=0.5):
         assert 0.0 < strength <= 1.0
-        super(Implosion, self).__init__(strength)
+        super().__init__(strength)
 
 
 class Pinch(WarpTransform):
@@ -561,7 +560,7 @@ class Pinch(WarpTransform):
     """
 
     def __init__(self, strength=0.5):
-        super(Pinch, self).__init__()
+        super().__init__()
         assert 0.0 <= abs(strength) <= 1.0
         self.strength = strength
 
@@ -585,9 +584,9 @@ class Pinch(WarpTransform):
             torch.linspace(-1, 1, height),
             torch.linspace(-1, 1, width))
 
-        r = torch.sqrt(x_indices ** 2 + y_indices ** 2)
+        magnitude = torch.sqrt(x_indices ** 2 + y_indices ** 2)
 
-        pinch_factor = torch.sin((torch.pi/2) * r) ** (-1*self.strength)
+        pinch_factor = torch.sin((torch.pi/2) * magnitude) ** (-1*self.strength)
         x_new = x_indices*pinch_factor
         y_new = y_indices*pinch_factor
 
@@ -598,7 +597,8 @@ class Pinch(WarpTransform):
 
 class Punch(Pinch):
     """
-    Applies a punch distortion effect which is opposite of pinch and pushes image away from the user.
+    Applies a punch distortion effect which is opposite of pinch and pushes
+    image away from the user.
 
     Transformation
     --------------
@@ -613,12 +613,13 @@ class Punch(Pinch):
     """
 
     def __init__(self, strength=0.5):
-        super(Punch, self).__init__(-strength)
+        super().__init__(-strength)
 
 
 class Shear(WarpTransform):
     """
-    Applies a shear distortion effect. Implemented as defined here: https://en.wikipedia.org/wiki/Shear_mapping
+    Applies a shear distortion effect.
+    Implemented as defined here: https://en.wikipedia.org/wiki/Shear_mapping
 
     Transformation
     --------------
@@ -628,14 +629,14 @@ class Shear(WarpTransform):
     Parameters
     ----------
     strength : float
-        The strength of the shear distortion effect. Also defined as the cotangent of the shear angle.
-        Positive for right/top leaning, negative for left/bottom leaning shear.
+        The strength of the shear distortion effect. Also defined as the cotangent of
+        the shear angle. Positive for right/top leaning, negative for left/bottom leaning shear.
     axis: str
         The axis along which to apply the shearing effect ('horizontal' or 'vertical').
     """
 
     def __init__(self, strength=0.5, axis='horizontal'):
-        super(Shear, self).__init__()
+        super().__init__()
         self.strength = strength
         assert axis in ['horizontal', 'vertical']
         self.axis = axis
@@ -674,14 +675,17 @@ class Shear(WarpTransform):
 
 class Perspective(WarpTransform):
     """
+    # pylint: disable=C0301
+
     Applies a random perspective wrap as defined here:
     https://pytorch.org/vision/main/_modules/torchvision/transforms/transforms.html#RandomPerspective
     https://pytorch.org/vision/main/_modules/torchvision/transforms/functional.html#perspective
 
     Transformation
     --------------
-    Picks random end points for perspective warp and uses current corners as start points to generate the warping matrix.
-    Given the warping coefficients (a, b, c, d, e, f, g, h), it does the below:
+    Picks random end points for perspective warp and uses current corners as start points
+    to generate the warping matrix. Given the warping coefficients (a, b, c, d, e, f, g, h)
+    we have the following association:
     x' = (ax + by + c) / (gx + hy + 1)
     y' = (dx + ey + f) / (gx + hy + 1)
 
@@ -692,7 +696,7 @@ class Perspective(WarpTransform):
     """
 
     def __init__(self, strength=0.5):
-        super(Perspective, self).__init__()
+        super().__init__()
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -711,13 +715,14 @@ class Perspective(WarpTransform):
         torch.Tensor
             The grid for warping the image.
         """
+        # pylint: disable=C0103
+
         y_indices, x_indices = torch.meshgrid(
             torch.linspace(-1, 1, height),
             torch.linspace(-1, 1, width))
 
         distortion_scale = self.strength
-        half_height = 1
-        half_width = 1
+
         topleft = [
             -1 + distortion_scale*torch.rand(1).item(),
             -1 + distortion_scale*torch.rand(1).item(),

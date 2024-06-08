@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import Fisheye
 from torqueo import show
 
+
 def test_fisheye():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_fisheye():
     plt.savefig('assets/warp_fields/fisheye.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

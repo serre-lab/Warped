@@ -13,5 +13,5 @@ from .base import WarpTransform
 from .plots import show
 from .transforms import (
     Fisheye, Swirl, BarrelDistortion, Pincushion, Stretching, Compression, Twirl, Wave, Spherize,
-    Bulge, Implosion, Pinch, Punch, Shear, PerspectiveWarp)
+    Bulge, Implosion, Pinch, Punch, Shear, Perspective)
 from .controller import WarpController

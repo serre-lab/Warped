@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import Wave
 from torqueo import show
 
+
 def test_wave():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_wave():
     plt.savefig('assets/warp_fields/wave.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import Stretching
 from torqueo import show
 
+
 def test_stretch():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_stretch():
     plt.savefig('assets/warp_fields/stretch.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

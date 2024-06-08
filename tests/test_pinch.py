@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import Pinch
 from torqueo import show
 
+
 def test_pinch():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_pinch():
     plt.savefig('assets/warp_fields/pinch.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from torqueo import Spherize
 from torqueo import show
 
+
 def test_spherize():
     # Load image and convert to tensor
     transform = transforms.Compose([
@@ -29,5 +30,3 @@ def test_spherize():
     plt.savefig('assets/warp_fields/spherize.jpg', bbox_inches='tight')
     plt.clf()
     plt.close()
-
-

@@ -48,9 +48,10 @@ class WarpTransform(torch.nn.Module):
         """
         assert img.dim() == 4
 
-        _, _, height, width = img.size()
+        batch_size, _, height, width = img.size()
         grid = self.generate_warp_field(height, width)
         grid = grid.to(img.device)
+        grid = grid.repeat(batch_size, 1, 1, 1)
 
         warped_img = F.grid_sample(img, grid, align_corners=True,
                                    mode='bilinear', padding_mode='zeros')

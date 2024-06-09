@@ -14,9 +14,6 @@ class WarpTransform(torch.nn.Module):
     method to provide the specific warp grid for the transformation.
     """
 
-    def __init__(self):
-        super().__init__()
-
     def generate_warp_field(self, height, width):
         """
         Generates the warp field for the transformation.

@@ -52,10 +52,10 @@ Below are some examples of image transformations using **Torqueo**.
 
 |  |  |  |
 |-|-|-|
-| <img src="./assets/rabbit.jpg" width="30%" alt="Original Image"><br> **Original Image** | <img src="./assets/transformations/barrel.jpg" width="30%" alt="Barrel"><br> **Barrel** | <img src="./assets/transformations/fisheye.jpg" width="30%" alt="Fisheye"><br> **Fisheye**|
-| <img src="./assets/transformations/perspective.jpg" width="30%" alt="Perspective"><br> **Perspective** | <img src="./assets/transformations/pinch.jpg" width="30%" alt="Pinch"><br> **Pinch** | <img src="./assets/transformations/spherize.jpg" width="30%" alt="Spherize"><br> **Spherize**|
-| <img src="./assets/transformations/stretch.jpg" width="30%" alt="Stretch"><br> **Stretch** | <img src="./assets/transformations/swirl.jpg" width="30%" alt="Swirl"><br> **Swirl** | <img src="./assets/transformations/twirl.jpg" width="30%" alt="Twirl"><br> **Twirl**|
-| <img src="./assets/transformations/wave.jpg" width="30%" alt="Wave"><br> **Wave** | | |
+| <img src="./assets/rabbit.jpg" width="99%" alt="Original Image"><br> **Original Image** | <img src="./assets/transformations/barrel.jpg" width="99%" alt="Barrel"><br> **Barrel** | <img src="./assets/transformations/fisheye.jpg" width="99%" alt="Fisheye"><br> **Fisheye**|
+| <img src="./assets/transformations/perspective.jpg" width="99%" alt="Perspective"><br> **Perspective** | <img src="./assets/transformations/pinch.jpg" width="99%" alt="Pinch"><br> **Pinch** | <img src="./assets/transformations/spherize.jpg" width="99%" alt="Spherize"><br> **Spherize**|
+| <img src="./assets/transformations/stretch.jpg" width="99%" alt="Stretch"><br> **Stretch** | <img src="./assets/transformations/swirl.jpg" width="99%" alt="Swirl"><br> **Swirl** | <img src="./assets/transformations/twirl.jpg" width="99%" alt="Twirl"><br> **Twirl**|
+| <img src="./assets/transformations/wave.jpg" width="99%" alt="Wave"><br> **Wave** | | |
 
 # Authors of the code
 

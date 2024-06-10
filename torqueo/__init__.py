@@ -7,7 +7,7 @@ warping transformations.
 
 """
 
-__version__ = '0.0.0'
+__version__ = '0.0.1'
 
 from .base import WarpTransform
 from .plots import show

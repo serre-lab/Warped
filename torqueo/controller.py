@@ -53,7 +53,7 @@ class WarpController():
         }
         if strength_range:
             if self.class_name == "Implosion":
-                assert strength_range[1] == 1
+                assert strength_range[1] == 1, "Identity transformation for implosion."
                 self.mapping_dict[self.class_name] = lambda x: (
                     torch.linspace(
                         strength_range[0], strength_range[1], total_levels

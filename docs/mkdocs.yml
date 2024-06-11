@@ -2,7 +2,7 @@ site_name: Torqueo
 site_description: Documentation for Torqueo, a personal toolbox for image warping.
 site_url: https://serre-lab.github.io/Warped/
 repo_name: "serre-lab/Warped"
-repo_url: https://github.com/serre-lab/Warped/tree/stable
+repo_url: https://github.com/serre-lab/Warped
 edit_uri: edit/main/docs/docs
 nav:
   - Home: index.md

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://serre-lab.github.io/Warped/</loc>
+         <lastmod>2024-06-11</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://serre-lab.github.io/Warped/reference/base/</loc>
+         <lastmod>2024-06-11</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://serre-lab.github.io/Warped/reference/controller/</loc>
+         <lastmod>2024-06-11</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://serre-lab.github.io/Warped/reference/plots/</loc>
+         <lastmod>2024-06-11</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://serre-lab.github.io/Warped/reference/transforms/</loc>
+         <lastmod>2024-06-11</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+</urlset>

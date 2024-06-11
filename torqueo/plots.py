@@ -5,13 +5,16 @@ from PIL import Image
 
 
 def to_numpy(tensor):
-    # Ensure tensor is on CPU and convert to NumPy
+    """
+    Ensure tensor is on CPU and convert to NumPy.
+    """
     return tensor.detach().cpu().numpy()
 
 
 def check_format(arr):
-    # ensure numpy array and move channels to the last dimension
-    # if they are in the first dimension
+    """
+    Ensure numpy array and move channels to the last dimension if they are in the first dimension.
+    """
     if isinstance(arr, torch.Tensor):
         arr = to_numpy(arr)
     if isinstance(arr, Image.Image):
@@ -22,7 +25,9 @@ def check_format(arr):
 
 
 def normalize(image):
-    # normalize image to 0-1 range
+    """
+    Normalize image to 0-1 range.
+    """
     image = np.array(image, dtype=np.float32)
     image -= image.min()
     image /= image.max()
@@ -30,12 +35,16 @@ def normalize(image):
 
 
 def clip_percentile(img, percentile=0.1):
-    # clip pixel values to specified percentile range
+    """
+    Clip pixel values to specified percentile range.
+    """
     return np.clip(img, np.percentile(img, percentile), np.percentile(img, 100-percentile))
 
 
 def show(img, norm=False, **kwargs):
-    # display image with normalization and channels in the last dimension
+    """
+    Display image with normalization and channels in the last dimension.
+    """
     img = check_format(img)
     img = normalize(img) if norm else img
 

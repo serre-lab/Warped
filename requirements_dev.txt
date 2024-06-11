@@ -2,3 +2,9 @@ tox
 pytest
 pytest-cov
 pylint
+docutils
+Markdown
+mkdocs
+mkdocs-material
+numkdoc
+pymdown-extensions

@@ -10,10 +10,12 @@ class Fisheye(WarpTransform):
 
     Transformation
     --------------
+    ```
     r' = r^{1 + strength}
     x' = r' cos(theta)
     y' = r' sin(theta)
-    with r and theta the polar form coordinate of x,y and k the strenght.
+    ```
+    where r and theta are the polar form coordinate of x,y and k the strength.
 
     Parameters
     ----------
@@ -66,9 +68,11 @@ class Swirl(WarpTransform):
 
     Transformation
     --------------
+    ```
     theta' = theta + (radius - r) * strength
     x' = r' * cos(theta')
     y' = r' * sin(theta')
+    ```
 
     Parameters
     ----------
@@ -130,9 +134,11 @@ class BarrelDistortion(WarpTransform):
 
     Transformation
     --------------
+    ```
     r' = r * (1 + strength * r^2)
     x' = r' * cos(theta)
     y' = r' * sin(theta)
+    ```
 
     Parameters
     ----------
@@ -191,9 +197,11 @@ class Pincushion(BarrelDistortion):
 
     Transformation
     --------------
+    ```
     r' = r * (1 - strength * r^2)
     x' = r' * cos(theta)
     y' = r' * sin(theta)
+    ```
 
     Parameters
     ----------
@@ -211,8 +219,10 @@ class Stretching(WarpTransform):
 
     Transformation
     --------------
+    ```
     x' = x * (1 - strength)  (if axis = 'horizontal')
     y' = y * (1 - strength)  (if axis = 'vertical')
+    ```
 
     Parameters
     ----------
@@ -269,8 +279,10 @@ class Compression(Stretching):
 
     Transformation
     --------------
+    ```
     x' = x * (1 + strength)  (if axis = 'horizontal')
     y' = y * (1 + strength)  (if axis = 'vertical')
+    ```
 
     Parameters
     ----------
@@ -292,9 +304,11 @@ class Twirl(WarpTransform):
 
     Transformation
     --------------
+    ```
     theta' = theta + strength * r
     x' = r * cos(theta')
     y' = r * sin(theta')
+    ```
 
     Parameters
     ----------
@@ -348,12 +362,14 @@ class Wave(WarpTransform):
 
     Transformation
     --------------
+    ```
     y' = y + strength * amplitude * sin(2 * pi * frequency * x + phase)  (if axis = 'horizontal')
     x' = x + strength * amplitude * sin(2 * pi * frequency * y + phase)  (if axis = 'vertical')
+    ```
 
     Parameters
     ----------
-    strength: float
+    strength : float
         The strength of the distortion as defined by the scaling of the amplitude.
     amplitude : float
         The amplitude of the wave.
@@ -415,9 +431,11 @@ class Spherize(WarpTransform):
 
     Transformation
     --------------
+    ```
     r' = sin(r * strength * pi/2) / (strength * pi/2)
     x' = r' * cos(theta)
     y' = r' * sin(theta)
+    ```
 
     Parameters
     ----------
@@ -470,9 +488,11 @@ class Bulge(WarpTransform):
 
     Transformation
     --------------
+    ```
     r' = r^strength
     x' = r' * cos(theta)
     y' = r' * sin(theta)
+    ```
 
     Parameters
     ----------
@@ -528,9 +548,11 @@ class Implosion(Bulge):
 
     Transformation
     --------------
+    ```
     r' = r^strength
     x' = r' * cos(theta)
     y' = r' * sin(theta)
+    ```
 
     Parameters
     ----------
@@ -549,9 +571,11 @@ class Pinch(WarpTransform):
 
     Transformation
     --------------
+    ```
     pinch_factor = sin(pi/2 * r)^(-strength)
     x' = x' * pinch_factor
     y' = y' * pinch_factor
+    ```
 
     Parameters
     ----------
@@ -602,9 +626,11 @@ class Punch(Pinch):
 
     Transformation
     --------------
+    ```
     punch_factor = sin(pi/2 * r)^(strength)
     x' = x' * punch_factor
     y' = y' * punch_factor
+    ```
 
     Parameters
     ----------
@@ -623,8 +649,10 @@ class Shear(WarpTransform):
 
     Transformation
     --------------
+    ```
     x' = x + strength*y (if axis = 'horizontal')
     y' = strength*x + y (if axis = 'vertical')
+    ```
 
     Parameters
     ----------
@@ -686,8 +714,10 @@ class Perspective(WarpTransform):
     Picks random end points for perspective warp and uses current corners as start points
     to generate the warping matrix. Given the warping coefficients (a, b, c, d, e, f, g, h)
     we have the following association:
+    ```
     x' = (ax + by + c) / (gx + hy + 1)
     y' = (dx + ey + f) / (gx + hy + 1)
+    ```
 
     Parameters
     ----------

@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="assets/banner.png" width="75%" alt="Torqueo logo" align="center" />
+    <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/banner.png" width="75%" alt="Torqueo logo" align="center" />
 </div>
 
 <div align="center">
@@ -54,10 +54,10 @@ Below are some examples of image transformations using **Torqueo**.
 
 |  |  |  |
 |-|-|-|
-| <img src="./assets/rabbit.jpg" width="99%" alt="Original Image"><br> **Original Image** | <img src="./assets/transformations/barrel.jpg" width="99%" alt="Barrel"><br> **Barrel** | <img src="./assets/transformations/fisheye.jpg" width="99%" alt="Fisheye"><br> **Fisheye**|
-| <img src="./assets/transformations/perspective.jpg" width="99%" alt="Perspective"><br> **Perspective** | <img src="./assets/transformations/pinch.jpg" width="99%" alt="Pinch"><br> **Pinch** | <img src="./assets/transformations/spherize.jpg" width="99%" alt="Spherize"><br> **Spherize**|
-| <img src="./assets/transformations/stretch.jpg" width="99%" alt="Stretch"><br> **Stretch** | <img src="./assets/transformations/swirl.jpg" width="99%" alt="Swirl"><br> **Swirl** | <img src="./assets/transformations/twirl.jpg" width="99%" alt="Twirl"><br> **Twirl**|
-| <img src="./assets/transformations/wave.jpg" width="99%" alt="Wave"><br> **Wave** | | |
+| <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/rabbit.jpg" width="99%" alt="Original Image"><br> **Original Image** | <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/barrel.jpg" width="99%" alt="Barrel"><br> **Barrel** | <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/fisheye.jpg" width="99%" alt="Fisheye"><br> **Fisheye**|
+| <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/perspective.jpg" width="99%" alt="Perspective"><br> **Perspective** | <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/pinch.jpg" width="99%" alt="Pinch"><br> **Pinch** | <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/spherize.jpg" width="99%" alt="Spherize"><br> **Spherize**|
+| <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/stretch.jpg" width="99%" alt="Stretch"><br> **Stretch** | <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/swirl.jpg" width="99%" alt="Swirl"><br> **Swirl** | <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/twirl.jpg" width="99%" alt="Twirl"><br> **Twirl**|
+| <img src="https://raw.githubusercontent.com/serre-lab/Warped/main/assets/transformations/wave.jpg" width="99%" alt="Wave"><br> **Wave** | | |
 
 # Authors of the code
 

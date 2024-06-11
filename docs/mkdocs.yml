@@ -1,0 +1,58 @@
+site_name: Torqueo
+site_description: Documentation for Torqueo, a personal toolbox for image warping.
+site_url: https://serre-lab.github.io/Warped/
+repo_name: "serre-lab/Warped"
+repo_url: https://github.com/serre-lab/Warped/tree/stable
+edit_uri: edit/main/docs/docs
+nav:
+  - Home: index.md
+  - API Reference:
+      - base.py: reference/base.md
+      - transforms.py: reference/transforms.md
+      - controller.py: reference/controller.md
+      - plots.py: reference/plots.md
+plugins:
+  - numkdoc
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          setup_commands:
+            - "import sys; sys.path.append('../torqueo')"
+          options:
+            show_source: False
+            separate_signature: True
+            line_length: 60
+            docstring_style: numpy
+theme:
+  name: "material"
+  palette:
+  - scheme: default
+    primary: dark
+    accent: indigo
+    toggle:
+      icon: material/toggle-switch-off-outline
+      name: Switch to dark mode
+  - scheme: slate
+    toggle:
+      icon: material/toggle-switch
+      name: Switch to light mode
+markdown_extensions:
+  - footnotes
+  - extra
+  - admonition
+  - pymdownx.arithmatex
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - codehilite
+  - toc:
+      permalink: true
+      toc_depth: 1-2
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg

@@ -9,20 +9,20 @@ class WarpController():
 
     Parameters
     ----------
-    warp_transform: WarpTransform
+    warp_transform : WarpTransform
         The particular warping class that we want a controller over. Example: Fisheye, Swirl.
-    max_distortion_level: int
+    max_distortion_level : int
         The maximum distortion level possible for this warping controller. Should be >= 0.
         When max_distortion_level is not passed with a range, the strength range is hard-coded
         and the max_distortion_level is used to determine how many samples to get from this range.
-    strength_range: A tuple of floats or a tuple of ints
+    strength_range : A tuple of floats or a tuple of ints
         The minimum/identity warping strength and the maximum warping strength for a transformation.
         We uniformly sample max_distortion_level+1 levels from this range.
 
-    Example Usage
-    -------------
-    SwirlController = WarpController(Swirl, 5, (0, 1))
-    swirl_transformer = SwirlController(1, radius=1)
+    Examples
+    --------
+    >>> SwirlController = WarpController(Swirl, 5, (0, 1))
+    >>> swirl_transformer = SwirlController(1, radius=1)
 
     The args following distortion_level need to be keyword arguments.
     """
@@ -68,7 +68,7 @@ class WarpController():
         """
         Parameters
         ----------
-        distortion_level: int
+        distortion_level : int
             The distortion effect from 0 to max_distortion_level. 0 for identify function,
             max_distortion_level for max distortion as defined in the mapping function.
 

@@ -59,6 +59,7 @@ xplique_dev_env/
 
 # mkdocs documentation
 /site
+docs/site
 
 # notebooks and lab
 notebooks/

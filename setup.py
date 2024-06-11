@@ -5,7 +5,7 @@ with open("README.md", encoding="utf-8") as fh:
 
 setup(
     name="Torqueo",
-    version="0.0.1",
+    version="0.0.2",
     description="Personal toolbox for image Warping",
     long_description=README,
     long_description_content_type="text/markdown",

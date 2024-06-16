@@ -723,11 +723,24 @@ class Perspective(WarpTransform):
     ----------
     strength : float
         The strength of the perspective distortion effect.
+    random_seeds : list of floats
+        List of 8 random floats from 0 to 1. Used for end-point calculation.
     """
 
-    def __init__(self, strength=0.5):
+    def __init__(self, strength=0.5, random_seeds=None):
         super().__init__()
+        assert 0<=strength<1
         self.strength = strength
+        if random_seeds is None:
+            self.rands = [
+                torch.rand(1).item(), torch.rand(1).item(),
+                torch.rand(1).item(), torch.rand(1).item(),
+                torch.rand(1).item(), torch.rand(1).item(),
+                torch.rand(1).item(), torch.rand(1).item()
+                ]
+            print("Perspective initialized with random vals:", self.rands)
+        else:
+            self.rands = random_seeds
 
     def generate_warp_field(self, height, width):
         """
@@ -754,20 +767,20 @@ class Perspective(WarpTransform):
         distortion_scale = self.strength
 
         topleft = [
-            -1 + distortion_scale*torch.rand(1).item(),
-            -1 + distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*self.rands[0],
+            -1 + distortion_scale*self.rands[1],
         ]
         topright = [
-            1 - distortion_scale*torch.rand(1).item(),
-            -1 + distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*self.rands[2],
+            -1 + distortion_scale*self.rands[3],
         ]
         botright = [
-            1 - distortion_scale*torch.rand(1).item(),
-            1 - distortion_scale*torch.rand(1).item(),
+            1 - distortion_scale*self.rands[4],
+            1 - distortion_scale*self.rands[5],
         ]
         botleft = [
-            -1 + distortion_scale*torch.rand(1).item(),
-            1 - distortion_scale*torch.rand(1).item(),
+            -1 + distortion_scale*self.rands[6],
+            1 - distortion_scale*self.rands[7],
         ]
         startpoints = [[-1, -1], [1, -1], [1, 1], [-1, 1]]
         endpoints = [topleft, topright, botright, botleft]

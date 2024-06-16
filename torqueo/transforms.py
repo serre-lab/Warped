@@ -729,7 +729,7 @@ class Perspective(WarpTransform):
 
     def __init__(self, strength=0.5, random_seeds=None):
         super().__init__()
-        assert 0<=strength<1
+        assert 0<=strength<=1
         self.strength = strength
         if random_seeds is None:
             self.rands = [

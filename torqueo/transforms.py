@@ -580,12 +580,11 @@ class Pinch(WarpTransform):
     Parameters
     ----------
     strength : float
-        The strength of the pinch distortion effect. Must be between 0.0 and 1.0.
+        The strength of the pinch distortion effect.
     """
 
     def __init__(self, strength=0.5):
         super().__init__()
-        assert 0.0 <= abs(strength) <= 1.0
         self.strength = strength
 
     def generate_warp_field(self, height, width):
@@ -635,7 +634,7 @@ class Punch(Pinch):
     Parameters
     ----------
     strength : float
-        The strength of the punch distortion effect. Must be between 0.0 and 1.0.
+        The strength of the punch distortion effect.
     """
 
     def __init__(self, strength=0.5):
